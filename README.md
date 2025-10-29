@@ -135,13 +135,11 @@ await _database.DeleteGoalAsync(Goal goal);// Delete goal
 
 ## NuGet Packages
 
-+---------------------------------------------------------------------------+
 |         Package            | Version |           Purpose                  |
 |----------------------------|---------|------------------------------------|
 | `CommunityToolkit.Mvvm`    | 8.4.0   | MVVM helpers and source generators |
 | `sqlite-net-pcl`           | 1.9.172 | SQLite ORM for .NET                |
 | `SQLitePCLRaw.bundle_green`| 2.1.2   | SQLite native binaries             |
-+---------------------------------------------------------------------------+
 
 ## Platform Support
 
