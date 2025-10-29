@@ -4,11 +4,81 @@
              x:Class="GoalTrackerMVVM.Views.DetailPage"
              x:Name="DetailPageRoot"
              Title="Goal Detail">
-    <VerticalStackLayout Padding="16" Spacing="8">
-        <Label Text="{Binding Goal.Name}" FontSize="20" FontAttributes="Bold" />
-        <Label Text="{Binding Goal.Motivation}" />
-        <Label Text="{Binding Goal.TargetDate, StringFormat='Target Date: {0}'}" />
-        <Label Text="{Binding Goal.Progress, StringFormat='Progress: {0:P0}'}" />
-        <Button Text="Back" Command="{Binding BackCommand}" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+            <!-- Goal Name -->
+            <Label Text="{Binding Goal.Name}" 
+                   FontSize="28" 
+                   FontAttributes="Bold" 
+                   HorizontalTextAlignment="Center" />
+            
+            <!-- Progress Section -->
+            <Border Padding="16" 
+                    BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2B2B2B}"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Progress" 
+                           FontSize="16" 
+                           FontAttributes="Bold" />
+                    <ProgressBar Progress="{Binding Goal.Progress}" 
+                                 HeightRequest="12" />
+                    <Label Text="{Binding Goal.Progress, StringFormat='{0:P0} Complete'}" 
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+            
+            <!-- Motivation Section -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Motivation" 
+                       FontSize="18" 
+                       FontAttributes="Bold" />
+                <Label Text="{Binding Goal.Motivation}" 
+                       FontSize="14" 
+                       LineBreakMode="WordWrap" />
+            </VerticalStackLayout>
+            
+            <!-- Steps Section -->
+            <VerticalStackLayout Spacing="8" 
+                                 IsVisible="{Binding Goal.Steps, Converter={StaticResource StringNullOrEmptyBoolConverter}}">
+                <Label Text="Steps to Achieve" 
+                       FontSize="18" 
+                       FontAttributes="Bold" />
+                <Label Text="{Binding Goal.Steps}" 
+                       FontSize="14" 
+                       LineBreakMode="WordWrap" />
+            </VerticalStackLayout>
+            
+            <!-- Target Date Section -->
+            <Border Padding="12" 
+                    BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#1A237E}"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="🎯" 
+                           FontSize="24" 
+                           VerticalOptions="Center" />
+                    <VerticalStackLayout>
+                        <Label Text="Target Date" 
+                               FontSize="12" 
+                               TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" />
+                        <Label Text="{Binding Goal.TargetDate}" 
+                               FontSize="16" 
+                               FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Border>
+            
+            <!-- Back Button -->
+            <Button Text="Back to Goals" 
+                    Command="{Binding BackCommand}" 
+                    Margin="0,20,0,0" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

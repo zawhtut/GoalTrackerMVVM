@@ -3,16 +3,53 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GoalTrackerMVVM.Models;
 using GoalTrackerMVVM.Views;
+using GoalTrackerMVVM.Services;
 
 namespace GoalTrackerMVVM.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
+        private readonly GoalDatabase _database;
+
         public ObservableCollection<Goal> Goals { get; }
 
-        public MainViewModel()
+        [ObservableProperty]
+        private bool isRefreshing;
+
+        public MainViewModel(GoalDatabase database)
         {
-            Goals = new ObservableCollection<Goal>
+            _database = database;
+            Goals = new ObservableCollection<Goal>();
+            
+            // Load goals from database
+            Task.Run(async () => await LoadGoalsAsync());
+        }
+
+        private async Task LoadGoalsAsync()
+        {
+            var goals = await _database.GetGoalsAsync();
+            
+            // If database is empty, add sample data
+            if (goals.Count == 0)
+            {
+                await SeedDatabaseAsync();
+                goals = await _database.GetGoalsAsync();
+            }
+
+            // Update UI on main thread
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Goals.Clear();
+                foreach (var goal in goals)
+                {
+                    Goals.Add(goal);
+                }
+            });
+        }
+
+        private async Task SeedDatabaseAsync()
+        {
+            var sampleGoals = new List<Goal>
             {
                 new Goal()
                 {
@@ -50,6 +87,11 @@ namespace GoalTrackerMVVM.ViewModels
                     Progress = 0.7
                 }
             };
+
+            foreach (var goal in sampleGoals)
+            {
+                await _database.SaveGoalAsync(goal);
+            }
         }
 
         // Navigate to Add page to user input
@@ -77,12 +119,22 @@ namespace GoalTrackerMVVM.ViewModels
 
         // Task 8 - Delete goal command
         [RelayCommand]
-        void DeleteGoal(Goal goal)
+        async Task DeleteGoalAsync(Goal goal)
         {
             if (goal is null)
                 return;
 
+            await _database.DeleteGoalAsync(goal);
             Goals.Remove(goal);
+        }
+
+        // Refresh goals from database
+        [RelayCommand]
+        async Task RefreshGoalsAsync()
+        {
+            IsRefreshing = true;
+            await LoadGoalsAsync();
+            IsRefreshing = false;
         }
     }
 }

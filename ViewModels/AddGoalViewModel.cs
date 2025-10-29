@@ -1,11 +1,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GoalTrackerMVVM.Models;
+using GoalTrackerMVVM.Services;
 
 namespace GoalTrackerMVVM.ViewModels
 {
     public partial class AddGoalViewModel : ObservableObject
     {
+        private readonly GoalDatabase _database;
+
         // Separate Observable Property for every input field
         [ObservableProperty]
         private string name;
@@ -19,9 +22,17 @@ namespace GoalTrackerMVVM.ViewModels
         [ObservableProperty]
         private DateTime targetDate = DateTime.Today; // default value
 
-        [RelayCommand]
-        async Task SubmitNewGoal()
+        public AddGoalViewModel(GoalDatabase database)
         {
+            _database = database;
+        }
+
+        [RelayCommand]
+        async Task SubmitNewGoalAsync()
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+                return;
+
             Goal goal = new Goal()
             {
                 Name = Name,
@@ -31,8 +42,10 @@ namespace GoalTrackerMVVM.ViewModels
                 Progress = GetProgress(TargetDate)
             };
 
-            // In a real app, you would add this to a service or pass it back
-            // For now, we'll just navigate back
+            // Save to database
+            await _database.SaveGoalAsync(goal);
+
+            // Navigate back
             await Shell.Current.GoToAsync("..");
         }
 
