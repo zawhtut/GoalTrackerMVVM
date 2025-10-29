@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using GoalTrackerMVVM.Views;
 using GoalTrackerMVVM.ViewModels;
+using GoalTrackerMVVM.Services;
 
 namespace GoalTrackerMVVM
 {
@@ -16,6 +17,9 @@ namespace GoalTrackerMVVM
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+            // Register Database Service
+            builder.Services.AddSingleton<GoalDatabase>();
 
             // Register ViewModels
             builder.Services.AddSingleton<MainViewModel>();
