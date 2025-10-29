@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GoalTrackerMVVM.Views.DetailPage"
+             x:Name="DetailPageRoot"
+             Title="Goal Detail">
+    <VerticalStackLayout Padding="16" Spacing="8">
+        <Label Text="{Binding Goal.Name}" FontSize="20" FontAttributes="Bold" />
+        <Label Text="{Binding Goal.Motivation}" />
+        <Label Text="{Binding Goal.TargetDate, StringFormat='Target Date: {0}'}" />
+        <Label Text="{Binding Goal.Progress, StringFormat='Progress: {0:P0}'}" />
+        <Button Text="Back" Command="{Binding BackCommand}" />
+    </VerticalStackLayout>
+</ContentPage>
