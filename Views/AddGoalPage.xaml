@@ -20,7 +20,7 @@
             <DatePicker Date="{Binding TargetDate}" />
             
             <Button Text="Save Goal" 
-                    Command="{Binding SubmitNewGoalAsyncCommand}"
+                    Command="{Binding SubmitNewGoalCommand}"
                     BackgroundColor="#512BD4"
                     TextColor="White"
                     Margin="0,20,0,0" />
