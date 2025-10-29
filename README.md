@@ -1,4 +1,4 @@
-# GoalTrackerMVVM
+﻿# GoalTrackerMVVM
 
 A modern goal tracking application built with .NET MAUI, demonstrating the MVVM (Model-View-ViewModel) pattern with SQLite data persistence.
 
@@ -6,7 +6,7 @@ A modern goal tracking application built with .NET MAUI, demonstrating the MVVM 
 ![C#](https://img.shields.io/badge/C%23-13.0-239120?logo=csharp)
 ![Platform](https://img.shields.io/badge/Platform-Windows-0078D4?logo=windows)
 
-## ?? About
+## About
 
 GoalTrackerMVVM is a personal goal management application that helps you track your goals, monitor progress, and stay motivated. The app showcases modern .NET MAUI development practices including:
 
@@ -16,47 +16,55 @@ GoalTrackerMVVM is a personal goal management application that helps you track y
 - **CommunityToolkit.Mvvm** - Leveraging source generators for boilerplate-free MVVM code
 - **Responsive UI** - Beautiful, theme-aware interface with progress visualization
 
-## ? Features
+## Features
 
 ### Core Functionality
-- ? **Create Goals** - Set up new goals with name, motivation, steps, and target date
-- ? **View Goals** - Browse all your goals with progress indicators
-- ? **Edit Goals** - Update goal details and adjust progress with a slider
-- ? **Delete Goals** - Remove goals you no longer need
-- ? **Progress Tracking** - Visual progress bars with 5% increment adjustments
-- ? **Data Persistence** - All data saved to SQLite database
+- **Create Goals** - Set up new goals with name, motivation, steps, and target date
+- **View Goals** - Browse all your goals with progress indicators
+- **Edit Goals** - Update goal details and adjust progress with a slider
+- **Delete Goals** - Remove goals you no longer need
+- **Progress Tracking** - Visual progress bars with 5% increment adjustments
+- **Data Persistence** - All data saved to SQLite database
 
 ### UI/UX Features
-- ?? **Dark/Light Theme Support** - Automatically adapts to system theme
-- ?? **Progress Visualization** - ProgressBar components show completion status
-- ?? **Pull-to-Refresh** - Swipe down to reload goals from database
-- ?? **Smartphone Window Size** - Optimized 393x852 window for quick testing
-- ?? **Clean Card-Based UI** - Modern, readable interface with rounded corners
+- **Dark/Light Theme Support** - Automatically adapts to system theme
+- **Progress Visualization** - ProgressBar components show completion status
+- **Pull-to-Refresh** - Swipe down to reload goals from database
+- **Smartphone Window Size** - Optimized 393x852 window for quick testing
+- **Clean Card-Based UI** - Modern, readable interface with rounded corners
 
-## ??? Architecture
+## Architecture
 
 ### Project Structure
+
 ```
 GoalTrackerMVVM/
-??? Models/
-?   ??? Goal.cs                          # Data model with SQLite attributes
-??? ViewModels/
-?   ??? MainViewModel.cs                 # Main page logic and commands
-?   ??? DetailViewModel.cs               # Goal detail and edit logic
-?   ??? AddGoalViewModel.cs              # New goal creation logic
-??? Views/
-?   ??? MainPage.xaml                    # Goal list view
-?   ??? DetailPage.xaml                  # Goal detail/edit view
-?   ??? AddGoalPage.xaml                 # New goal form
-??? Services/
-?   ??? GoalDatabase.cs                  # SQLite database operations
-??? Converters/
-?   ??? StringNullOrEmptyBoolConverter.cs # XAML visibility converter
-??? Resources/
-?   ??? Styles/                          # Colors and style definitions
-??? Constants.cs                         # Database configuration
-??? MauiProgram.cs                       # DI and app configuration
-??? AppShell.xaml                        # Shell navigation setup
+|
++-- Models/
+|   +-- Goal.cs                          # Data model with SQLite attributes
+|
++-- ViewModels/
+|   +-- MainViewModel.cs                 # Main page logic and commands
+|   +-- DetailViewModel.cs               # Goal detail and edit logic
+|   +-- AddGoalViewModel.cs              # New goal creation logic
+|
++-- Views/
+|   +-- MainPage.xaml                    # Goal list view
+|   +-- DetailPage.xaml                  # Goal detail/edit view
+|   +-- AddGoalPage.xaml                 # New goal form
+|
++-- Services/
+|   +-- GoalDatabase.cs                  # SQLite database operations
+|
++-- Converters/
+|   +-- StringNullOrEmptyBoolConverter.cs # XAML visibility converter
+|
++-- Resources/
+|   +-- Styles/                          # Colors and style definitions
+|
++-- Constants.cs                         # Database configuration
++-- MauiProgram.cs                       # DI and app configuration
++-- AppShell.xaml                        # Shell navigation setup
 ```
 
 ### MVVM Pattern Implementation
@@ -81,7 +89,7 @@ public partial class MainViewModel : ObservableObject
 }
 ```
 
-## ??? Database
+## Database
 
 **SQLite** is used for local data persistence:
 - **Location:** `FileSystem.AppDataDirectory/GoalTrackerSQLite.db3`
@@ -97,7 +105,7 @@ await _database.SaveGoalAsync(Goal goal);  // Create or update
 await _database.DeleteGoalAsync(Goal goal);// Delete goal
 ```
 
-## ?? Getting Started
+## Getting Started
 
 ### Prerequisites
 - Visual Studio 2022 (17.8 or later)
@@ -125,18 +133,20 @@ await _database.DeleteGoalAsync(Goal goal);// Delete goal
    - Press `F5` or click the **Run** button
    - The app window will open at 393x852 (smartphone size for testing)
 
-## ?? NuGet Packages
+## NuGet Packages
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `CommunityToolkit.Mvvm` | 8.4.0 | MVVM helpers and source generators |
-| `sqlite-net-pcl` | 1.9.172 | SQLite ORM for .NET |
-| `SQLitePCLRaw.bundle_green` | 2.1.2 | SQLite native binaries |
++---------------------------------------------------------------------------+
+|         Package            | Version |           Purpose                  |
+|----------------------------|---------|------------------------------------|
+| `CommunityToolkit.Mvvm`    | 8.4.0   | MVVM helpers and source generators |
+| `sqlite-net-pcl`           | 1.9.172 | SQLite ORM for .NET                |
+| `SQLitePCLRaw.bundle_green`| 2.1.2   | SQLite native binaries             |
++---------------------------------------------------------------------------+
 
-## ?? Platform Support
+## Platform Support
 
 ### Currently Enabled
-- ? **Windows** - Fully configured and ready to run
+- **Windows** - Fully configured and ready to run
 
 **Why Windows-only?** For faster development and testing cycles. Windows builds are significantly faster than mobile platform builds, making it ideal for rapid development iteration.
 
@@ -163,7 +173,7 @@ The project is built with .NET MAUI and can easily target multiple platforms. To
 - **iOS** - Requires macOS with Xcode and paired Mac
 - **macOS** - Requires macOS to build and run
 
-## ?? Usage
+## Usage
 
 ### Creating a Goal
 1. Click the **"+ New Goal"** button
@@ -185,13 +195,13 @@ The project is built with .NET MAUI and can easily target multiple platforms. To
 4. Click **"Save Changes"** or **"Cancel"**
 
 ### Deleting a Goal
-1. In the main list, click the **???** button on any goal card
+1. In the main list, click the delete button on any goal card
 2. The goal is immediately deleted from both UI and database
 
 ### Refreshing the List
 - Pull down on the goal list to refresh from the database
 
-## ?? Customization
+## Customization
 
 ### Window Size
 The app opens at smartphone dimensions for quick testing. To change:
@@ -212,15 +222,15 @@ Modify colors in `Resources/Styles/Colors.xaml`:
 ### Sample Data
 Initial goals are defined in `MainViewModel.cs` in the `SeedDatabaseAsync()` method.
 
-## ?? Testing
+## Testing
 
 The app includes:
-- ? Form validation (goal name required)
-- ? Null safety checks throughout
-- ? Error handling for database operations
-- ? User-friendly error messages
+- Form validation (goal name required)
+- Null safety checks throughout
+- Error handling for database operations
+- User-friendly error messages
 
-## ?? Code Conventions
+## Code Conventions
 
 Following C# and .NET MAUI best practices:
 - **PascalCase** for public members
@@ -229,7 +239,7 @@ Following C# and .NET MAUI best practices:
 - **ObservableCollection** for data-bound collections
 - **Dependency Injection** for services
 
-## ?? Contributing
+## Contributing
 
 Contributions, issues, and feature requests are welcome!
 
@@ -239,21 +249,21 @@ Contributions, issues, and feature requests are welcome!
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## ?? License
+## License
 
 This project is open source and available for educational purposes.
 
-## ?? Acknowledgments
+## Acknowledgments
 
 - Built with [.NET MAUI](https://dotnet.microsoft.com/apps/maui)
 - MVVM helpers from [CommunityToolkit.Mvvm](https://learn.microsoft.com/dotnet/communitytoolkit/mvvm/)
 - Database powered by [SQLite](https://www.sqlite.org/)
 
-## ?? Contact
+## Contact
 
 **GitHub:** [@zawhtut](https://github.com/zawhtut)  
 **Project Link:** [https://github.com/zawhtut/GoalTrackerMVVM](https://github.com/zawhtut/GoalTrackerMVVM)
 
 ---
 
-? If you find this project helpful, please consider giving it a star!
+**If you find this project helpful, please consider giving it a star!**
