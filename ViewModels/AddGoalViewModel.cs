@@ -30,14 +30,18 @@ namespace GoalTrackerMVVM.ViewModels
         [RelayCommand]
         async Task SubmitNewGoalAsync()
         {
+            // Validate required fields
             if (string.IsNullOrWhiteSpace(Name))
+            {
+                await Shell.Current.DisplayAlert("Validation Error", "Please enter a goal name.", "OK");
                 return;
+            }
 
             Goal goal = new Goal()
             {
                 Name = Name,
-                Motivation = Motivation,
-                Steps = Steps,
+                Motivation = Motivation ?? string.Empty,
+                Steps = Steps ?? string.Empty,
                 TargetDate = TargetDate.ToString("MMMM dd, yyyy"),
                 Progress = GetProgress(TargetDate)
             };
@@ -45,8 +49,19 @@ namespace GoalTrackerMVVM.ViewModels
             // Save to database
             await _database.SaveGoalAsync(goal);
 
+            // Clear form fields
+            ClearForm();
+
             // Navigate back
             await Shell.Current.GoToAsync("..");
+        }
+
+        private void ClearForm()
+        {
+            Name = string.Empty;
+            Motivation = string.Empty;
+            Steps = string.Empty;
+            TargetDate = DateTime.Today;
         }
 
         private double GetProgress(DateTime targetDate)
@@ -54,17 +69,22 @@ namespace GoalTrackerMVVM.ViewModels
             var today = DateTime.Today;
             var daysUntilTarget = (targetDate - today).Days;
 
-            // Simple progress calculation: closer dates have lower progress
+            double initialProgress;
+
+            // Simple progress calculation: closer dates have lower initial progress
             if (daysUntilTarget <= 0)
-                return 1.0;
+                initialProgress = 1.0;
             else if (daysUntilTarget <= 30)
-                return 0.8;
+                initialProgress = 0.8;
             else if (daysUntilTarget <= 90)
-                return 0.5;
+                initialProgress = 0.5;
             else if (daysUntilTarget <= 180)
-                return 0.3;
+                initialProgress = 0.3;
             else
-                return 0.1;
+                initialProgress = 0.1;
+
+            // Round to nearest 5% (0.05)
+            return Math.Round(initialProgress * 20) / 20;
         }
     }
 }

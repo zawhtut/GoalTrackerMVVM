@@ -20,9 +20,12 @@ namespace GoalTrackerMVVM.ViewModels
         {
             _database = database;
             Goals = new ObservableCollection<Goal>();
-            
-            // Load goals from database
-            Task.Run(async () => await LoadGoalsAsync());
+        }
+
+        // Public method to load goals - can be called from MainPage
+        public async Task InitializeAsync()
+        {
+            await LoadGoalsAsync();
         }
 
         private async Task LoadGoalsAsync()
