@@ -1,42 +1,42 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using GoalTrackerMVVM.Models;
 using GoalTrackerMVVM.Views;
-using GoalTrackerMVVM.Services;
+using GoalTrackerMVVM.BusinessLogic;
 
-namespace GoalTrackerMVVM.ViewModels
+namespace GoalTrackerMVVM.ViewModels;
+
+public partial class MainViewModel : ObservableObject
 {
-    public partial class MainViewModel : ObservableObject
+    private readonly IGoalService _goalService;
+
+    public ObservableCollection<Goal> Goals { get; }
+
+    [ObservableProperty]
+    private bool isRefreshing;
+
+    public MainViewModel(IGoalService goalService)
     {
-        private readonly GoalDatabase _database;
+        _goalService = goalService;
+        Goals = new ObservableCollection<Goal>();
+    }
 
-        public ObservableCollection<Goal> Goals { get; }
+    // Public method to load goals - can be called from MainPage
+    public async Task InitializeAsync()
+    {
+        await LoadGoalsAsync();
+    }
 
-        [ObservableProperty]
-        private bool isRefreshing;
-
-        public MainViewModel(GoalDatabase database)
+    private async Task LoadGoalsAsync()
+    {
+        try
         {
-            _database = database;
-            Goals = new ObservableCollection<Goal>();
-        }
+            var goals = await _goalService.GetAllGoalsAsync();
 
-        // Public method to load goals - can be called from MainPage
-        public async Task InitializeAsync()
-        {
-            await LoadGoalsAsync();
-        }
-
-        private async Task LoadGoalsAsync()
-        {
-            var goals = await _database.GetGoalsAsync();
-            
             // If database is empty, add sample data
             if (goals.Count == 0)
             {
                 await SeedDatabaseAsync();
-                goals = await _database.GetGoalsAsync();
+                goals = await _goalService.GetAllGoalsAsync();
             }
 
             // Update UI on main thread
@@ -49,95 +49,106 @@ namespace GoalTrackerMVVM.ViewModels
                 }
             });
         }
-
-        private async Task SeedDatabaseAsync()
+        catch (Exception ex)
         {
-            var sampleGoals = new List<Goal>
-            {
-                new Goal()
-                {
-                    Name = "Exam",
-                    Motivation = "There are no shortcuts to any place worth going.",
-                    TargetDate = "July 30, 2025",
-                    Progress = 0.5,
-                },
-                new Goal()
-                {
-                    Name = "Fitness",
-                    Motivation = "Strength does not come from what you can do. It comes from overcoming the things you once thought you couldn't.",
-                    TargetDate = "October 30, 2025",
-                    Progress = 0.2
-                },
-                new Goal()
-                {
-                    Name = "Learn Piano",
-                    Motivation = "Practice makes progress.",
-                    TargetDate = "December 01, 2025",
-                    Progress = 0.1
-                },
-                new Goal()
-                {
-                    Name = "Read 10 Books",
-                    Motivation = "A reader lives a thousand lives before he/she dies.",
-                    TargetDate = "December 31, 2025",
-                    Progress = 0.4
-                },
-                new Goal()
-                {
-                    Name = "Meditation Habit",
-                    Motivation = "Peace comes from within. Do not seek it without.",
-                    TargetDate = "September 10, 2025",
-                    Progress = 0.7
-                }
-            };
+            await Shell.Current.DisplayAlert("Error", $"Failed to load goals: {ex.Message}", "OK");
+        }
+    }
 
-            foreach (var goal in sampleGoals)
+    private async Task SeedDatabaseAsync()
+    {
+        var sampleGoals = new List<Goal>
+        {
+            new Goal()
             {
-                await _database.SaveGoalAsync(goal);
+                Name = "Exam",
+                Motivation = "There are no shortcuts to any place worth going.",
+                TargetDate = "July 30, 2025",
+                Progress = 0.5,
+            },
+            new Goal()
+            {
+                Name = "Fitness",
+                Motivation = "Strength does not come from what you can do. It comes from overcoming the things you once thought you couldn't.",
+                TargetDate = "October 30, 2025",
+                Progress = 0.2
+            },
+            new Goal()
+            {
+                Name = "Learn Piano",
+                Motivation = "Practice makes progress.",
+                TargetDate = "December 01, 2025",
+                Progress = 0.1
+            },
+            new Goal()
+            {
+                Name = "Read 10 Books",
+                Motivation = "A reader lives a thousand lives before he/she dies.",
+                TargetDate = "December 31, 2025",
+                Progress = 0.4
+            },
+            new Goal()
+            {
+                Name = "Meditation Habit",
+                Motivation = "Peace comes from within. Do not seek it without.",
+                TargetDate = "September 10, 2025",
+                Progress = 0.7
             }
-        }
+        };
 
-        // Navigate to Add page to user input
-        [RelayCommand]
-        async Task GoToAddAsync()
+        foreach (var goal in sampleGoals)
         {
-            await Shell.Current.GoToAsync($"{nameof(AddGoalPage)}");
+            await _goalService.CreateGoalAsync(goal);
         }
+    }
 
-        // Need user input -> user push an item
-        // Navigate to details page
-        // Give goal object to details page
-        [RelayCommand]
-        async Task GoToDetailsAsync(Goal goal)
+    // Navigate to Add page to user input
+    [RelayCommand]
+    async Task GoToAddAsync()
+    {
+        await Shell.Current.GoToAsync($"{nameof(AddGoalPage)}");
+    }
+
+    // Need user input -> user push an item
+    // Navigate to details page
+    // Give goal object to details page
+    [RelayCommand]
+    async Task GoToDetailsAsync(Goal goal)
+    {
+        if (goal is null)
+            return;
+
+        await Shell.Current.GoToAsync($"{nameof(DetailPage)}", true,
+            new Dictionary<string, object>
+            {
+                { "Goal", goal },
+            });
+    }
+
+    // Task 8 - Delete goal command
+    [RelayCommand]
+    async Task DeleteGoalAsync(Goal goal)
+    {
+        if (goal is null)
+            return;
+
+        try
         {
-            if (goal is null)
-                return;
-
-            await Shell.Current.GoToAsync($"{nameof(DetailPage)}", true,
-                new Dictionary<string, object>
-                {
-                    { "Goal", goal },
-                });
-        }
-
-        // Task 8 - Delete goal command
-        [RelayCommand]
-        async Task DeleteGoalAsync(Goal goal)
-        {
-            if (goal is null)
-                return;
-
-            await _database.DeleteGoalAsync(goal);
+            await _goalService.DeleteGoalAsync(goal);
             Goals.Remove(goal);
         }
-
-        // Refresh goals from database
-        [RelayCommand]
-        async Task RefreshGoalsAsync()
+        catch (Exception ex)
         {
-            IsRefreshing = true;
-            await LoadGoalsAsync();
-            IsRefreshing = false;
+            await Shell.Current.DisplayAlert("Error", $"Failed to delete goal: {ex.Message}", "OK");
         }
+    }
+
+    // Refresh goals from database
+    [RelayCommand]
+    async Task RefreshGoalsAsync()
+    {
+        IsRefreshing = true;
+        await LoadGoalsAsync();
+        IsRefreshing = false;
     }
 }

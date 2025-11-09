@@ -13,6 +13,14 @@ public partial class DetailPage : ContentPage
         _viewModel = viewModel;
     }
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        
+        // Refresh goal data from database to ensure we have the latest version
+        await _viewModel.RefreshGoalAsync();
+    }
+
     private async void OnProgressChanged(object sender, ValueChangedEventArgs e)
     {
         if (_viewModel.IsEditing)
