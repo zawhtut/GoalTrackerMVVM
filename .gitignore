@@ -3,10 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Implementation summary (documentation files)
-IMPLEMENTATION_SUMMARY.md
-COMMANDS_IMPLEMENTATION.md
-MVVM_COMMAND_NAMING.md
+# Ignore all .md files
+*.md
+
+# But not README.md
+!README.md
 
 # User-specific files
 *.rsuser
