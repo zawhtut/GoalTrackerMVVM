@@ -1,197 +1,205 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:GoalTrackerMVVM.Controls"
              x:Class="GoalTrackerMVVM.Views.DetailPage"
              x:Name="DetailPageRoot"
              Title="Goal Detail">
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16">
-            <!-- Goal Name - View Mode -->
-            <Label Text="{Binding Goal.Name}" 
-                   FontSize="28" 
-                   FontAttributes="Bold" 
-                   HorizontalTextAlignment="Center">
-                <Label.Triggers>
-                    <DataTrigger TargetType="Label" Binding="{Binding IsEditing}" Value="True">
-                        <Setter Property="IsVisible" Value="False" />
-                    </DataTrigger>
-                </Label.Triggers>
-            </Label>
-            
-            <!-- Goal Name - Edit Mode -->
-            <Entry Text="{Binding Goal.Name}"
-                   FontSize="20"
-                   FontAttributes="Bold"
-                   HorizontalTextAlignment="Center">
-                <Entry.Triggers>
-                    <DataTrigger TargetType="Entry" Binding="{Binding IsEditing}" Value="False">
-                        <Setter Property="IsVisible" Value="False" />
-                    </DataTrigger>
-                </Entry.Triggers>
-            </Entry>
-            
-            <!-- Progress Section -->
-            <Border Padding="16" 
-                    BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2B2B2B}"
-                    StrokeThickness="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
-                </Border.StrokeShape>
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Progress" 
-                           FontSize="16" 
-                           FontAttributes="Bold" />
-                    
-                    <!-- Current Progress Display -->
-                    <ProgressBar Progress="{Binding Goal.Progress}" 
-                                 HeightRequest="12" />
-                    <Label Text="{Binding Goal.Progress, StringFormat='{0:P0} Complete'}" 
-                           FontSize="18"
-                           FontAttributes="Bold"
-                           HorizontalTextAlignment="Center" />
-                    
-                    <!-- Edit Mode: Slider with Dynamic Percentage -->
-                    <VerticalStackLayout Spacing="4">
-                        <VerticalStackLayout.Triggers>
-                            <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding IsEditing}" Value="False">
-                                <Setter Property="IsVisible" Value="False" />
-                            </DataTrigger>
-                        </VerticalStackLayout.Triggers>
-                        
-                        <Label Text="Adjust Progress (5% increments):" 
-                               FontSize="14" 
-                               FontAttributes="Italic"
-                               HorizontalTextAlignment="Center"
-                               Margin="0,8,0,4" />
-                        
-                        <Slider x:Name="ProgressSlider"
-                                Minimum="0" 
-                                Maximum="1"
-                                MinimumTrackColor="{StaticResource Primary}"
-                                MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
-                                ThumbColor="{StaticResource Primary}"
-                                Value="{Binding Goal.Progress}"
-                                ValueChanged="OnProgressChanged" />
-                        
-                        <Label x:Name="SliderValueLabel"
-                               Text="{Binding Source={x:Reference ProgressSlider}, Path=Value, StringFormat='Updating to: {0:P0}'}"
-                               FontSize="16"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource Primary}"
-                               HorizontalTextAlignment="Center" />
-                    </VerticalStackLayout>
-                </VerticalStackLayout>
-            </Border>
-            
-            <!-- Motivation Section -->
-            <VerticalStackLayout Spacing="8">
-                <Label Text="Motivation" 
-                       FontSize="18" 
-                       FontAttributes="Bold" />
-                <!-- View Mode -->
-                <Label Text="{Binding Goal.Motivation}" 
-                       FontSize="14" 
-                       LineBreakMode="WordWrap">
+    
+    <Grid>
+        <!-- Main Content -->
+        <ScrollView>
+            <VerticalStackLayout Padding="20" Spacing="16">
+                <!-- Goal Name - View Mode -->
+                <Label Text="{Binding Goal.Name}" 
+                       FontSize="28" 
+                       FontAttributes="Bold" 
+                       HorizontalTextAlignment="Center">
                     <Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding IsEditing}" Value="True">
                             <Setter Property="IsVisible" Value="False" />
                         </DataTrigger>
                     </Label.Triggers>
                 </Label>
-                <!-- Edit Mode -->
-                <Editor Text="{Binding Goal.Motivation}"
-                        FontSize="14"
-                        HeightRequest="100">
-                    <Editor.Triggers>
-                        <DataTrigger TargetType="Editor" Binding="{Binding IsEditing}" Value="False">
+
+                <!-- Goal Name - Edit Mode -->
+                <Entry Text="{Binding Goal.Name}"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center">
+                    <Entry.Triggers>
+                        <DataTrigger TargetType="Entry" Binding="{Binding IsEditing}" Value="False">
                             <Setter Property="IsVisible" Value="False" />
                         </DataTrigger>
-                    </Editor.Triggers>
-                </Editor>
-            </VerticalStackLayout>
-            
-            <!-- Steps Section -->
-            <VerticalStackLayout Spacing="8" 
-                                 IsVisible="{Binding Goal.Steps, Converter={StaticResource StringNullOrEmptyBoolConverter}}">
-                <Label Text="Steps to Achieve" 
-                       FontSize="18" 
-                       FontAttributes="Bold" />
-                <!-- View Mode -->
-                <Label Text="{Binding Goal.Steps}" 
-                       FontSize="14" 
-                       LineBreakMode="WordWrap">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding IsEditing}" Value="True">
-                            <Setter Property="IsVisible" Value="False" />
-                        </DataTrigger>
-                    </Label.Triggers>
-                </Label>
-                <!-- Edit Mode -->
-                <Editor Text="{Binding Goal.Steps}"
-                        FontSize="14"
-                        HeightRequest="100">
-                    <Editor.Triggers>
-                        <DataTrigger TargetType="Editor" Binding="{Binding IsEditing}" Value="False">
-                            <Setter Property="IsVisible" Value="False" />
-                        </DataTrigger>
-                    </Editor.Triggers>
-                </Editor>
-            </VerticalStackLayout>
-            
-            <!-- Target Date Section -->
-            <Border Padding="12" 
-                    BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#1A237E}"
-                    StrokeThickness="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="8" />
-                </Border.StrokeShape>
-                <HorizontalStackLayout Spacing="8">
-                    <Label Text="🎯" 
-                           FontSize="24" 
-                           VerticalOptions="Center" />
-                    <VerticalStackLayout>
-                        <Label Text="Target Date" 
-                               FontSize="12" 
-                               TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" />
-                        <Label Text="{Binding Goal.TargetDate}" 
+                    </Entry.Triggers>
+                </Entry>
+
+                <!-- Progress Section -->
+                <Border Padding="16" 
+                        BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2B2B2B}"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Progress" 
                                FontSize="16" 
                                FontAttributes="Bold" />
+
+                        <!-- Current Progress Display -->
+                        <ProgressBar Progress="{Binding Goal.Progress}" 
+                                     HeightRequest="12" />
+                        <Label Text="{Binding Goal.Progress, StringFormat='{0:P0} Complete'}" 
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" />
+
+                        <!-- Edit Mode: Slider with Dynamic Percentage -->
+                        <VerticalStackLayout Spacing="4">
+                            <VerticalStackLayout.Triggers>
+                                <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding IsEditing}" Value="False">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </VerticalStackLayout.Triggers>
+
+                            <Label Text="Adjust Progress (5% increments):" 
+                                   FontSize="14" 
+                                   FontAttributes="Italic"
+                                   HorizontalTextAlignment="Center"
+                                   Margin="0,8,0,4" />
+
+                            <Slider x:Name="ProgressSlider"
+                                    Minimum="0" 
+                                    Maximum="1"
+                                    MinimumTrackColor="{StaticResource Primary}"
+                                    MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                                    ThumbColor="{StaticResource Primary}"
+                                    Value="{Binding Goal.Progress}"
+                                    ValueChanged="OnProgressChanged" />
+
+                            <Label x:Name="SliderValueLabel"
+                                   Text="{Binding Source={x:Reference ProgressSlider}, Path=Value, StringFormat='Updating to: {0:P0}'}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
-                </HorizontalStackLayout>
-            </Border>
-            
-            <!-- Action Buttons - View Mode -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,20,0,0">
-                <Grid.Triggers>
-                    <DataTrigger TargetType="Grid" Binding="{Binding IsEditing}" Value="True">
-                        <Setter Property="IsVisible" Value="False" />
-                    </DataTrigger>
-                </Grid.Triggers>
-                <Button Grid.Column="0"
-                        Text="Edit Goal"
-                        Command="{Binding ToggleEditCommand}"
-                        BackgroundColor="{AppThemeBinding Light=#FFA500, Dark=#FF8C00}" />
-                <Button Grid.Column="1"
-                        Text="Back" 
-                        Command="{Binding BackCommand}" />
-            </Grid>
-            
-            <!-- Action Buttons - Edit Mode -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,20,0,0">
-                <Grid.Triggers>
-                    <DataTrigger TargetType="Grid" Binding="{Binding IsEditing}" Value="False">
-                        <Setter Property="IsVisible" Value="False" />
-                    </DataTrigger>
-                </Grid.Triggers>
-                <Button Grid.Column="0"
-                        Text="Save Changes"
-                        Command="{Binding SaveChangesCommand}"
-                        BackgroundColor="{StaticResource Primary}" />
-                <Button Grid.Column="1"
-                        Text="Cancel" 
-                        Command="{Binding ToggleEditCommand}"
-                        BackgroundColor="Gray" />
-            </Grid>
-        </VerticalStackLayout>
-    </ScrollView>
+                </Border>
+
+                <!-- Motivation Section -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Motivation" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    <!-- View Mode -->
+                    <Label Text="{Binding Goal.Motivation}" 
+                           FontSize="14" 
+                           LineBreakMode="WordWrap">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsEditing}" Value="True">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <!-- Edit Mode -->
+                    <Editor Text="{Binding Goal.Motivation}"
+                            FontSize="14"
+                            HeightRequest="100">
+                        <Editor.Triggers>
+                            <DataTrigger TargetType="Editor" Binding="{Binding IsEditing}" Value="False">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </Editor.Triggers>
+                    </Editor>
+                </VerticalStackLayout>
+
+                <!-- Steps Section -->
+                <VerticalStackLayout Spacing="8" 
+                                     IsVisible="{Binding Goal.Steps, Converter={StaticResource StringNullOrEmptyBoolConverter}}">
+                    <Label Text="Steps to Achieve" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    <!-- View Mode -->
+                    <Label Text="{Binding Goal.Steps}" 
+                           FontSize="14" 
+                           LineBreakMode="WordWrap">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsEditing}" Value="True">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <!-- Edit Mode -->
+                    <Editor Text="{Binding Goal.Steps}"
+                            FontSize="14"
+                            HeightRequest="100">
+                        <Editor.Triggers>
+                            <DataTrigger TargetType="Editor" Binding="{Binding IsEditing}" Value="False">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </Editor.Triggers>
+                    </Editor>
+                </VerticalStackLayout>
+
+                <!-- Target Date Section -->
+                <Border Padding="12" 
+                        BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#1A237E}"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="🎯" 
+                               FontSize="24" 
+                               VerticalOptions="Center" />
+                        <VerticalStackLayout>
+                            <Label Text="Target Date" 
+                                   FontSize="12" 
+                                   TextColor="{AppThemeBinding Light=Gray, Dark=LightGray}" />
+                            <Label Text="{Binding Goal.TargetDate}" 
+                                   FontSize="16" 
+                                   FontAttributes="Bold" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Action Buttons - View Mode -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,20,0,0">
+                    <Grid.Triggers>
+                        <DataTrigger TargetType="Grid" Binding="{Binding IsEditing}" Value="True">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Grid.Triggers>
+                    <Button Grid.Column="0"
+                            Text="Edit Goal"
+                            Command="{Binding ToggleEditCommand}"
+                            BackgroundColor="{AppThemeBinding Light=#FFA500, Dark=#FF8C00}" />
+                    <Button Grid.Column="1"
+                            Text="Back" 
+                            Command="{Binding BackCommand}" />
+                </Grid>
+
+                <!-- Action Buttons - Edit Mode -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,20,0,80">
+                    <Grid.Triggers>
+                        <DataTrigger TargetType="Grid" Binding="{Binding IsEditing}" Value="False">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Grid.Triggers>
+                    <Button Grid.Column="0"
+                            Text="Save Changes"
+                            Command="{Binding SaveChangesCommand}"
+                            BackgroundColor="{StaticResource Primary}" />
+                    <Button Grid.Column="1"
+                            Text="Cancel" 
+                            Command="{Binding ToggleEditCommand}"
+                            BackgroundColor="Gray" />
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Toast Notification Overlay -->
+        <controls:ToastNotification x:Name="ToastNotification" />
+    </Grid>
 </ContentPage>

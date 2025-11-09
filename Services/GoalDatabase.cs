@@ -1,6 +1,3 @@
-using SQLite;
-using GoalTrackerMVVM.Models;
-
 namespace GoalTrackerMVVM.Services;
 
 public class GoalDatabase : IGoalDatabase

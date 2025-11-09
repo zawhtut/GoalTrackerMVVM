@@ -1,6 +1,3 @@
-using GoalTrackerMVVM.Models;
-using GoalTrackerMVVM.Services;
-
 namespace GoalTrackerMVVM.BusinessLogic;
 
 /// <summary>

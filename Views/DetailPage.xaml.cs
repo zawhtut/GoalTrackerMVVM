@@ -1,5 +1,3 @@
-using GoalTrackerMVVM.ViewModels;
-
 namespace GoalTrackerMVVM.Views;
 
 public partial class DetailPage : ContentPage
@@ -11,6 +9,9 @@ public partial class DetailPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
         _viewModel = viewModel;
+        
+        // Pass the toast control to the view model
+        _viewModel.SetToastNotification(ToastNotification);
     }
 
     protected override async void OnAppearing()

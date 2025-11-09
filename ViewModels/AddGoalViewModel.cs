@@ -1,8 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using GoalTrackerMVVM.Models;
-using GoalTrackerMVVM.BusinessLogic;
-
 namespace GoalTrackerMVVM.ViewModels;
 
 public partial class AddGoalViewModel : ObservableObject

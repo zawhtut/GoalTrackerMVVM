@@ -1,6 +1,3 @@
-using SQLite;
-using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace GoalTrackerMVVM.Models;
 
 public partial class Goal : ObservableObject

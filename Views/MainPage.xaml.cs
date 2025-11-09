@@ -1,5 +1,3 @@
-using GoalTrackerMVVM.ViewModels;
-
 namespace GoalTrackerMVVM.Views;
 
 public partial class MainPage : ContentPage

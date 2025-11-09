@@ -1,8 +1,3 @@
-using System.Collections.ObjectModel;
-using GoalTrackerMVVM.Models;
-using GoalTrackerMVVM.Views;
-using GoalTrackerMVVM.BusinessLogic;
-
 namespace GoalTrackerMVVM.ViewModels;
 
 public partial class MainViewModel : ObservableObject

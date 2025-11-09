@@ -1,8 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using GoalTrackerMVVM.Views;
-using GoalTrackerMVVM.ViewModels;
-using GoalTrackerMVVM.Services;
-using GoalTrackerMVVM.BusinessLogic;
 
 namespace GoalTrackerMVVM;
 

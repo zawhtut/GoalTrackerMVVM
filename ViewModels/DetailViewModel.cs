@@ -1,14 +1,10 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using GoalTrackerMVVM.Models;
-using GoalTrackerMVVM.BusinessLogic;
-
 namespace GoalTrackerMVVM.ViewModels;
 
 [QueryProperty(nameof(Goal), "Goal")]
 public partial class DetailViewModel : ObservableObject
 {
     private readonly IGoalService _goalService;
+    private ToastNotification _toastNotification;
 
     [ObservableProperty]
     Goal goal;
@@ -19,6 +15,14 @@ public partial class DetailViewModel : ObservableObject
     public DetailViewModel(IGoalService goalService)
     {
         _goalService = goalService;
+    }
+
+    /// <summary>
+    /// Set the toast notification control from the view
+    /// </summary>
+    public void SetToastNotification(ToastNotification toastNotification)
+    {
+        _toastNotification = toastNotification;
     }
 
     /// <summary>
@@ -42,7 +46,7 @@ public partial class DetailViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Error", $"Failed to refresh goal: {ex.Message}", "OK");
+            await ShowToastAsync($"Failed to refresh: {ex.Message}");
         }
     }
 
@@ -72,11 +76,12 @@ public partial class DetailViewModel : ObservableObject
             // Refresh the goal from database to ensure UI shows saved data
             await RefreshGoalAsync();
 
-            await Shell.Current.DisplayAlert("Success", "Goal updated successfully!", "OK");
+            // Show success toast
+            await ShowToastAsync("Changes saved successfully");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Error", $"Failed to save changes: {ex.Message}", "OK");
+            await ShowToastAsync($"Error: {ex.Message}");
         }
     }
 
@@ -97,7 +102,18 @@ public partial class DetailViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Error", $"Failed to update progress: {ex.Message}", "OK");
+            await ShowToastAsync($"Error updating progress: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Show a custom in-app toast notification
+    /// </summary>
+    private async Task ShowToastAsync(string message)
+    {
+        if (_toastNotification != null)
+        {
+            await _toastNotification.ShowAsync(message, 2000);
         }
     }
 }
